@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Resotainer — Dashboard global</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#1a1a1a;background:#f4f6f8;padding:1.25rem}
+.header{padding-bottom:.75rem;border-bottom:1px solid #e5e5e5;margin-bottom:1rem}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.brand{font-size:17px;font-weight:700;color:#1a1a1a}
+.pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;color:#555;background:white;border:1px solid #ddd;border-radius:20px;padding:4px 12px}
+.pill.sync{color:#166534;background:#f0fdf4;border-color:#bbf7d0}
+.pill.err{color:#9f1239;background:#fff1f2;border-color:#fecdd3}
+.prog-row{display:flex;align-items:center;gap:10px}
+.g-track{flex:1;height:6px;background:#e5e5e5;border-radius:3px;overflow:hidden}
+.g-fill{height:100%;border-radius:3px;transition:width .4s}
+.g-label{font-size:12px;color:#666;white-space:nowrap;font-weight:600}
+.section-head{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.6px;padding:10px 0 6px;border-top:1px solid #f0f0f0;margin-top:4px}
+.section-head:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ag-card{background:white;border:1px solid #e5e5e5;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;transition:background .15s}
+.ag-card:hover{background:#fafafa}
+.ag-card.done{background:#f0fdf4;border-color:#bbf7d0}
+.ag-card.warn-bg{background:#fffbeb;border-color:#fde68a}
+.ag-card.closed{background:#fff1f2;border-color:#fecdd3;opacity:.85}
+.ag-row1{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.ag-num{font-size:11px;color:#ccc;font-weight:700;width:18px;flex-shrink:0}
+.ag-name{font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:10px;padding:1px 7px;border-radius:6px;flex-shrink:0;font-weight:600;white-space:nowrap}
+.b-ok{background:#dcfce7;color:#166534}
+.b-warn{background:#fef9c3;color:#854d0e}
+.b-closed{background:#ffe4e6;color:#9f1239}
+.b-unk{background:#f3f4f6;color:#6b7280}
+.ag-row2{display:flex;align-items:center;gap:5px;padding-left:26px;margin-bottom:2px}
+.ag-adr{font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.ag-dot{width:3px;height:3px;border-radius:50%;background:#ccc;flex-shrink:0}
+.ag-tel{font-size:11px;color:#555;white-space:nowrap;font-weight:600}
+.ag-sub{font-size:10px;color:#aaa;font-style:italic;padding-left:26px;display:block;margin-bottom:2px}
+.ag-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.gps-row{display:flex;gap:4px}
+.btn-nav{font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #ddd;color:#555;background:white;text-decoration:none;display:inline-block;font-weight:600}
+.btn-nav:hover{background:#f5f5f5}
+.btn-gm{border-color:#bbd6f7;color:#1a56b0}
+.btn-wz{border-color:#b2f0f5;color:#0e7490}
+.cb-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;border:1px solid #e5e5e5;background:white;cursor:pointer;font-size:11px;color:#999;font-weight:600;transition:all .15s;white-space:nowrap}
+.cb-btn:hover{background:#f5f5f5}
+.cb-btn.posed{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.cb-btn.loading{opacity:.6;pointer-events:none}
+.dot-live{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.zcard-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <span class="brand">Resotainer — Dashboard global</span>
+    <div class="pills">
+      <span class="pill">Jeudi 2 avril · 14h–18h</span>
+      <span class="pill"><span class="dot-live"></span>Temps réel</span>
+      <span class="pill" id="sync-pill">Connexion...</span>
+    </div>
+  </div>
+  <div class="prog-row">
+    <span class="g-label" id="g-label">0 / 68 posées</span>
+    <div class="g-track"><div class="g-fill" id="g-fill" style="width:0%;background:#1a1a1a"></div></div>
+    <span class="g-label" id="g-pct">0%</span>
+  </div>
+</div>
+
+<div class="zcard-grid"><div class="zcard" id="zc-z1" style="background:white;border:1px solid #e5e5e5;border-radius:12px;padding:14px;cursor:default">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:#1b4f7222;color:#1b4f72">Zone 1</span>
+    <span style="font-size:11px;color:#888" id="pct-z1">0%</span>
+  </div>
+  <div style="font-size:22px;font-weight:700;color:#1b4f72;margin-bottom:2px" id="num-z1">0<span style="font-size:13px;font-weight:400;color:#888">/20</span></div>
+  <div style="font-size:11px;color:#888;margin-bottom:8px">Albertville (73)</div>
+  <div style="height:4px;background:#eee;border-radius:2px;overflow:hidden"><div id="bar-z1" style="height:100%;border-radius:2px;background:#1b4f72;width:0%;transition:width .4s"></div></div>
+  <div style="margin-top:10px;font-size:11px">
+    <a href="z1.html" style="color:#1b4f72;font-weight:600;text-decoration:none">Ouvrir la zone →</a>
+  </div>
+</div>
+<div class="zcard" id="zc-z2" style="background:white;border:1px solid #e5e5e5;border-radius:12px;padding:14px;cursor:default">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:#1e844922;color:#1e8449">Zone 2</span>
+    <span style="font-size:11px;color:#888" id="pct-z2">0%</span>
+  </div>
+  <div style="font-size:22px;font-weight:700;color:#1e8449;margin-bottom:2px" id="num-z2">0<span style="font-size:13px;font-weight:400;color:#888">/12</span></div>
+  <div style="font-size:11px;color:#888;margin-bottom:8px">Lézignan (11)</div>
+  <div style="height:4px;background:#eee;border-radius:2px;overflow:hidden"><div id="bar-z2" style="height:100%;border-radius:2px;background:#1e8449;width:0%;transition:width .4s"></div></div>
+  <div style="margin-top:10px;font-size:11px">
+    <a href="z2.html" style="color:#1e8449;font-weight:600;text-decoration:none">Ouvrir la zone →</a>
+  </div>
+</div>
+<div class="zcard" id="zc-z3" style="background:white;border:1px solid #e5e5e5;border-radius:12px;padding:14px;cursor:default">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:#7d3c9822;color:#7d3c98">Zone 3</span>
+    <span style="font-size:11px;color:#888" id="pct-z3">0%</span>
+  </div>
+  <div style="font-size:22px;font-weight:700;color:#7d3c98;margin-bottom:2px" id="num-z3">0<span style="font-size:13px;font-weight:400;color:#888">/11</span></div>
+  <div style="font-size:11px;color:#888;margin-bottom:8px">Champenoux (54)</div>
+  <div style="height:4px;background:#eee;border-radius:2px;overflow:hidden"><div id="bar-z3" style="height:100%;border-radius:2px;background:#7d3c98;width:0%;transition:width .4s"></div></div>
+  <div style="margin-top:10px;font-size:11px">
+    <a href="z3.html" style="color:#7d3c98;font-weight:600;text-decoration:none">Ouvrir la zone →</a>
+  </div>
+</div>
+<div class="zcard" id="zc-z4" style="background:white;border:1px solid #e5e5e5;border-radius:12px;padding:14px;cursor:default">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:#b7410e22;color:#b7410e">Zone 4</span>
+    <span style="font-size:11px;color:#888" id="pct-z4">0%</span>
+  </div>
+  <div style="font-size:22px;font-weight:700;color:#b7410e;margin-bottom:2px" id="num-z4">0<span style="font-size:13px;font-weight:400;color:#888">/25</span></div>
+  <div style="font-size:11px;color:#888;margin-bottom:8px">Bourg-lès-Valence (26)</div>
+  <div style="height:4px;background:#eee;border-radius:2px;overflow:hidden"><div id="bar-z4" style="height:100%;border-radius:2px;background:#b7410e;width:0%;transition:width .4s"></div></div>
+  <div style="margin-top:10px;font-size:11px">
+    <a href="z4.html" style="color:#b7410e;font-weight:600;text-decoration:none">Ouvrir la zone →</a>
+  </div>
+</div>
+</div>
+
+<script>
+
+const SUPA_URL="https://lyqpakqyrmudwjqfcnqa.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cXBha3F5cm11ZHdqcWZjbnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjMxODksImV4cCI6MjA5MDUzOTE4OX0._luZm6JrlO4JYHs86GFx4QKl57S4lsZf0-o-Yq6kPVg";
+
+async function sbGet(zone){
+  const r=await fetch(SUPA_URL+"/rest/v1/poses?zone=eq."+zone+"&select=id,posed,posed_at",{
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}
+  });
+  return r.ok?r.json():[];
+}
+
+async function sbUpsert(id,zone,num,nom,posed){
+  const body=JSON.stringify({id,zone,pose_num:num,nom,posed,posed_at:posed?new Date().toISOString():null,updated_at:new Date().toISOString()});
+  await fetch(SUPA_URL+"/rest/v1/poses",{
+    method:"POST",
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates"},
+    body
+  });
+}
+
+function sbSubscribe(zone,cb){
+  const es=new EventSource(SUPA_URL+"/realtime/v1/api/broadcast?apikey="+SUPA_KEY);
+  setInterval(()=>sbGet(zone).then(cb),8000);
+}
+
+
+const ZONES=[{"id":"z1","total":20,"ids":["z1_1","z1_2","z1_3","z1_4","z1_5","z1_6","z1_7","z1_8","z1_9","z1_10","z1_11","z1_12","z1_13","z1_14","z1_15","z1_16","z1_17","z1_18","z1_19","z1_20"]},{"id":"z2","total":12,"ids":["z2_1","z2_2","z2_3","z2_4","z2_5","z2_6","z2_7","z2_8","z2_9","z2_10","z2_11","z2_12"]},{"id":"z3","total":11,"ids":["z3_1","z3_2","z3_3","z3_4","z3_5","z3_6","z3_7","z3_8","z3_9","z3_10","z3_11"]},{"id":"z4","total":25,"ids":["z4_1","z4_2","z4_3","z4_4","z4_5","z4_6","z4_7","z4_8","z4_9","z4_10","z4_11","z4_12","z4_13","z4_14","z4_15","z4_16","z4_17","z4_18","z4_19","z4_20","z4_21","z4_22","z4_23","z4_24","z4_25"]},];
+const TOTAL=68;
+const posed={};
+
+async function loadAll(){
+  try{
+    const all=await Promise.all(ZONES.map(z=>sbGet(z.id)));
+    ZONES.forEach((z,i)=>{
+      all[i].forEach(r=>{posed[r.id]=r.posed;});
+      const d=z.ids.filter(id=>posed[id]).length;
+      const pct=z.total?Math.round(d/z.total*100):0;
+      document.getElementById("num-"+z.id).innerHTML=d+'<span style="font-size:13px;font-weight:400;color:#888">/'+z.total+'</span>';
+      document.getElementById("pct-"+z.id).textContent=pct+"%";
+      document.getElementById("bar-"+z.id).style.width=pct+"%";
+    });
+    const totD=Object.values(posed).filter(Boolean).length;
+    const gPct=Math.round(totD/TOTAL*100);
+    document.getElementById("g-label").textContent=totD+" / "+TOTAL+" posées";
+    document.getElementById("g-pct").textContent=gPct+"%";
+    document.getElementById("g-fill").style.width=gPct+"%";
+    const p=document.getElementById("sync-pill");
+    p.textContent="Synchronisé · "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+    p.className="pill sync";
+  }catch(e){
+    document.getElementById("sync-pill").textContent="Erreur réseau";
+    document.getElementById("sync-pill").className="pill err";
+  }
+}
+
+loadAll();
+setInterval(loadAll,8000);
+</script>
+</body>
+</html>

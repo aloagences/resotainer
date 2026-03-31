@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Resotainer — Zone 1 · Albertville (73)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#1a1a1a;background:#f4f6f8;padding:1.25rem}
+.header{padding-bottom:.75rem;border-bottom:1px solid #e5e5e5;margin-bottom:1rem}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.brand{font-size:17px;font-weight:700;color:#1a1a1a}
+.pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;color:#555;background:white;border:1px solid #ddd;border-radius:20px;padding:4px 12px}
+.pill.sync{color:#166534;background:#f0fdf4;border-color:#bbf7d0}
+.pill.err{color:#9f1239;background:#fff1f2;border-color:#fecdd3}
+.prog-row{display:flex;align-items:center;gap:10px}
+.g-track{flex:1;height:6px;background:#e5e5e5;border-radius:3px;overflow:hidden}
+.g-fill{height:100%;border-radius:3px;transition:width .4s}
+.g-label{font-size:12px;color:#666;white-space:nowrap;font-weight:600}
+.section-head{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.6px;padding:10px 0 6px;border-top:1px solid #f0f0f0;margin-top:4px}
+.section-head:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ag-card{background:white;border:1px solid #e5e5e5;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;transition:background .15s}
+.ag-card:hover{background:#fafafa}
+.ag-card.done{background:#f0fdf4;border-color:#bbf7d0}
+.ag-card.warn-bg{background:#fffbeb;border-color:#fde68a}
+.ag-card.closed{background:#fff1f2;border-color:#fecdd3;opacity:.85}
+.ag-row1{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.ag-num{font-size:11px;color:#ccc;font-weight:700;width:18px;flex-shrink:0}
+.ag-name{font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:10px;padding:1px 7px;border-radius:6px;flex-shrink:0;font-weight:600;white-space:nowrap}
+.b-ok{background:#dcfce7;color:#166534}
+.b-warn{background:#fef9c3;color:#854d0e}
+.b-closed{background:#ffe4e6;color:#9f1239}
+.b-unk{background:#f3f4f6;color:#6b7280}
+.ag-row2{display:flex;align-items:center;gap:5px;padding-left:26px;margin-bottom:2px}
+.ag-adr{font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.ag-dot{width:3px;height:3px;border-radius:50%;background:#ccc;flex-shrink:0}
+.ag-tel{font-size:11px;color:#555;white-space:nowrap;font-weight:600}
+.ag-sub{font-size:10px;color:#aaa;font-style:italic;padding-left:26px;display:block;margin-bottom:2px}
+.ag-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.gps-row{display:flex;gap:4px}
+.btn-nav{font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #ddd;color:#555;background:white;text-decoration:none;display:inline-block;font-weight:600}
+.btn-nav:hover{background:#f5f5f5}
+.btn-gm{border-color:#bbd6f7;color:#1a56b0}
+.btn-wz{border-color:#b2f0f5;color:#0e7490}
+.cb-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;border:1px solid #e5e5e5;background:white;cursor:pointer;font-size:11px;color:#999;font-weight:600;transition:all .15s;white-space:nowrap}
+.cb-btn:hover{background:#f5f5f5}
+.cb-btn.posed{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.cb-btn.loading{opacity:.6;pointer-events:none}
+.dot-live{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <span class="brand" style="color:#1b4f72">Resotainer · Zone 1 — Albertville (73)</span>
+    <div class="pills">
+      <span class="pill">Jeudi 2 avril · 14h–18h</span>
+      <span class="pill" id="sync-pill">Connexion...</span>
+    </div>
+  </div>
+  <div class="prog-row">
+    <span class="g-label" id="g-label">0 / 21 posées</span>
+    <div class="g-track"><div class="g-fill" id="g-fill" style="width:0%;background:#1b4f72"></div></div>
+    <span class="g-label" id="g-pct">0%</span>
+  </div>
+</div>
+
+<div class="section-head">Ugine</div>
+<div class="ag-card" id="card-z1_1">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">1</span>
+      <span class="ag-name">Val Savoie Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">12 Pl. Hôtel de Ville, 73400 Ugine</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 39 94 29</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Val%20Savoie%20Immobilier%2012%20Pl.%20H%C3%B4tel%20de%20Ville%2C%2073400%20Ugine" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Val%20Savoie%20Immobilier%2012%20Pl.%20H%C3%B4tel%20de%20Ville%2C%2073400%20Ugine&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_1" onclick="toggle('z1_1',1,'Val Savoie Immobilier')" >
+      <span id="btntxt-z1_1">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_2">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">2</span>
+      <span class="ag-name">123 Webimmo</span>
+      <span class="badge b-ok">9h30–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">4 Av. Paul Girod, 73400 Ugine</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 38 75 62</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=123%20Webimmo%204%20Av.%20Paul%20Girod%2C%2073400%20Ugine" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=123%20Webimmo%204%20Av.%20Paul%20Girod%2C%2073400%20Ugine&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_2" onclick="toggle('z1_2',2,'123 Webimmo')" >
+      <span id="btntxt-z1_2">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Albertville centre</div>
+<div class="ag-card" id="card-z1_3">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">3</span>
+      <span class="ag-name">Laforêt Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">9 Rue Félix Chautemps, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 80 81 96 10</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Lafor%C3%AAt%20Immobilier%209%20Rue%20F%C3%A9lix%20Chautemps%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Lafor%C3%AAt%20Immobilier%209%20Rue%20F%C3%A9lix%20Chautemps%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_3" onclick="toggle('z1_3',3,'Laforêt Immobilier')" >
+      <span id="btntxt-z1_3">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_4">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">4</span>
+      <span class="ag-name">Citya La Belle Étoile</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">19 Rue Félix Chautemps, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 32 67 89</span>
+    </div><span class="ag-sub">Syndic + gestion</span>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Citya%20La%20Belle%20%C3%89toile%2019%20Rue%20F%C3%A9lix%20Chautemps%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Citya%20La%20Belle%20%C3%89toile%2019%20Rue%20F%C3%A9lix%20Chautemps%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_4" onclick="toggle('z1_4',4,'Citya La Belle Étoile')" >
+      <span id="btntxt-z1_4">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_5">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">5</span>
+      <span class="ag-name">Evidence Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">21 Rue Suarez, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 56 43 95 02</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Evidence%20Immobilier%2021%20Rue%20Suarez%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Evidence%20Immobilier%2021%20Rue%20Suarez%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_5" onclick="toggle('z1_5',5,'Evidence Immobilier')" >
+      <span id="btntxt-z1_5">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_6">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">6</span>
+      <span class="ag-name">4% Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">12 Rue Claude Genoux, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 37 07 49</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=4%25%20Immobilier%2012%20Rue%20Claude%20Genoux%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=4%25%20Immobilier%2012%20Rue%20Claude%20Genoux%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_6" onclick="toggle('z1_6',6,'4% Immobilier')" >
+      <span id="btntxt-z1_6">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_7">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">7</span>
+      <span class="ag-name">Lacombe Immobilier</span>
+      <span class="badge b-unk">? inconnu</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">Rue Claude Genoux, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 32 15 48</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Lacombe%20Immobilier%20Rue%20Claude%20Genoux%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Lacombe%20Immobilier%20Rue%20Claude%20Genoux%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_7" onclick="toggle('z1_7',7,'Lacombe Immobilier')" >
+      <span id="btntxt-z1_7">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_8">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">8</span>
+      <span class="ag-name">ORPI GSD Immo</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">38 Av. Gal de Gaulle, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 32 36 04</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=ORPI%20GSD%20Immo%2038%20Av.%20Gal%20de%20Gaulle%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=ORPI%20GSD%20Immo%2038%20Av.%20Gal%20de%20Gaulle%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_8" onclick="toggle('z1_8',8,'ORPI GSD Immo')" >
+      <span id="btntxt-z1_8">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card warn-bg" id="card-z1_9">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">9</span>
+      <span class="ag-name">JF Immobilier</span>
+      <span class="badge b-warn">14h–17h45</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">5 Pl. Croix de l'Orme, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">06 03 80 37 62</span>
+    </div><span class="ag-sub">Ferme à 17h45</span>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=JF%20Immobilier%205%20Pl.%20Croix%20de%20l%27Orme%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=JF%20Immobilier%205%20Pl.%20Croix%20de%20l%27Orme%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_9" onclick="toggle('z1_9',9,'JF Immobilier')" >
+      <span id="btntxt-z1_9">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_10">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">10</span>
+      <span class="ag-name">Agence AXO</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">29 Rue Gambetta, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">06 26 68 67 84</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Agence%20AXO%2029%20Rue%20Gambetta%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Agence%20AXO%2029%20Rue%20Gambetta%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_10" onclick="toggle('z1_10',10,'Agence AXO')" >
+      <span id="btntxt-z1_10">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_11">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">11</span>
+      <span class="ag-name">Guy Hoquet Albertville</span>
+      <span class="badge b-ok">14h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">12 Place Grenette, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 39 06 60</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Guy%20Hoquet%20Albertville%2012%20Place%20Grenette%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Guy%20Hoquet%20Albertville%2012%20Place%20Grenette%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_11" onclick="toggle('z1_11',11,'Guy Hoquet Albertville')" >
+      <span id="btntxt-z1_11">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_12">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">12</span>
+      <span class="ag-name">CIS Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">72 Place de l'Europe, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 31 02 77</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=CIS%20Immobilier%2072%20Place%20de%20l%27Europe%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=CIS%20Immobilier%2072%20Place%20de%20l%27Europe%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_12" onclick="toggle('z1_12',12,'CIS Immobilier')" >
+      <span id="btntxt-z1_12">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_13">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">13</span>
+      <span class="ag-name">Agence Republic</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">57 Rue de la République, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 57 35 03 92</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Agence%20Republic%2057%20Rue%20de%20la%20R%C3%A9publique%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Agence%20Republic%2057%20Rue%20de%20la%20R%C3%A9publique%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_13" onclick="toggle('z1_13',13,'Agence Republic')" >
+      <span id="btntxt-z1_13">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_14">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">14</span>
+      <span class="ag-name">Sixième Avenue</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">9 Place de l'Église, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">09 81 30 52 52</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Sixi%C3%A8me%20Avenue%209%20Place%20de%20l%27%C3%89glise%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Sixi%C3%A8me%20Avenue%209%20Place%20de%20l%27%C3%89glise%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_14" onclick="toggle('z1_14',14,'Sixième Avenue')" >
+      <span id="btntxt-z1_14">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card warn-bg" id="card-z1_15">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">15</span>
+      <span class="ag-name">Elegna Immo</span>
+      <span class="badge b-warn">15h–17h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">137 Ch. de la Charrette, 73200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 38 48 71</span>
+    </div><span class="ag-sub">Syndic — passer après 15h</span>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Elegna%20Immo%20137%20Ch.%20de%20la%20Charrette%2C%2073200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Elegna%20Immo%20137%20Ch.%20de%20la%20Charrette%2C%2073200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_15" onclick="toggle('z1_15',15,'Elegna Immo')" >
+      <span id="btntxt-z1_15">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Frontenex</div>
+<div class="ag-card" id="card-z1_16">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">16</span>
+      <span class="ag-name">Bouveri Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">17 Rue de la Mairie, 73460 Frontenex</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 79 38 20 00</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Bouveri%20Immobilier%2017%20Rue%20de%20la%20Mairie%2C%2073460%20Frontenex" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Bouveri%20Immobilier%2017%20Rue%20de%20la%20Mairie%2C%2073460%20Frontenex&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_16" onclick="toggle('z1_16',16,'Bouveri Immobilier')" >
+      <span id="btntxt-z1_16">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Faverges-Seythenex</div>
+<div class="ag-card" id="card-z1_17">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">17</span>
+      <span class="ag-name">ERA Les Adrets</span>
+      <span class="badge b-ok">14h–18h30</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">57 Rue de la République, 74210</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 50 32 13 18</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=ERA%20Les%20Adrets%2057%20Rue%20de%20la%20R%C3%A9publique%2C%2074210" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=ERA%20Les%20Adrets%2057%20Rue%20de%20la%20R%C3%A9publique%2C%2074210&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_17" onclick="toggle('z1_17',17,'ERA Les Adrets')" >
+      <span id="btntxt-z1_17">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card warn-bg" id="card-z1_18">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">18</span>
+      <span class="ag-name">FONCIA Faverges</span>
+      <span class="badge b-warn">13h30–17h30</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">6 Place de l'Église, 74210</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 20 98 30 84</span>
+    </div><span class="ag-sub">Ferme à 17h30</span>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=FONCIA%20Faverges%206%20Place%20de%20l%27%C3%89glise%2C%2074210" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=FONCIA%20Faverges%206%20Place%20de%20l%27%C3%89glise%2C%2074210&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_18" onclick="toggle('z1_18',18,'FONCIA Faverges')" >
+      <span id="btntxt-z1_18">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_19">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">19</span>
+      <span class="ag-name">Aravis International</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">59 Rue Carnot, 74210</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 50 02 17 50</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Aravis%20International%2059%20Rue%20Carnot%2C%2074210" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Aravis%20International%2059%20Rue%20Carnot%2C%2074210&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_19" onclick="toggle('z1_19',19,'Aravis International')" >
+      <span id="btntxt-z1_19">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z1_20">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">20</span>
+      <span class="ag-name">ACP Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">22 Pl. Ch. de Gaulle, 74210</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 50 44 64 32</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=ACP%20Immobilier%2022%20Pl.%20Ch.%20de%20Gaulle%2C%2074210" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=ACP%20Immobilier%2022%20Pl.%20Ch.%20de%20Gaulle%2C%2074210&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z1_20" onclick="toggle('z1_20',20,'ACP Immobilier')" >
+      <span id="btntxt-z1_20">Poser</span>
+    </button>
+  </div>
+</div>
+
+
+<script>
+
+const SUPA_URL="https://lyqpakqyrmudwjqfcnqa.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cXBha3F5cm11ZHdqcWZjbnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjMxODksImV4cCI6MjA5MDUzOTE4OX0._luZm6JrlO4JYHs86GFx4QKl57S4lsZf0-o-Yq6kPVg";
+
+async function sbGet(zone){
+  const r=await fetch(SUPA_URL+"/rest/v1/poses?zone=eq."+zone+"&select=id,posed,posed_at",{
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}
+  });
+  return r.ok?r.json():[];
+}
+
+async function sbUpsert(id,zone,num,nom,posed){
+  const body=JSON.stringify({id,zone,pose_num:num,nom,posed,posed_at:posed?new Date().toISOString():null,updated_at:new Date().toISOString()});
+  await fetch(SUPA_URL+"/rest/v1/poses",{
+    method:"POST",
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates"},
+    body
+  });
+}
+
+function sbSubscribe(zone,cb){
+  const es=new EventSource(SUPA_URL+"/realtime/v1/api/broadcast?apikey="+SUPA_KEY);
+  setInterval(()=>sbGet(zone).then(cb),8000);
+}
+
+
+const ZONE="z1";
+const TOTAL=20;
+const posed={};
+
+function gu(n){return encodeURIComponent(n);}
+
+function applyState(id,val){
+  posed[id]=val;
+  const card=document.getElementById("card-"+id);
+  const btn=document.getElementById("btn-"+id);
+  const txt=document.getElementById("btntxt-"+id);
+  if(!card||!btn)return;
+  if(val){card.classList.add("done");btn.classList.add("posed");txt.textContent="Posé ✓";}
+  else{card.classList.remove("done");btn.classList.remove("posed");txt.textContent="Poser";}
+  updateProg();
+}
+
+function updateProg(){
+  const d=Object.values(posed).filter(Boolean).length;
+  const pct=Math.round(d/TOTAL*100);
+  document.getElementById("g-label").textContent=d+" / "+TOTAL+" posées";
+  document.getElementById("g-pct").textContent=pct+"%";
+  document.getElementById("g-fill").style.width=pct+"%";
+}
+
+async function toggle(id,num,nom){
+  const btn=document.getElementById("btn-"+id);
+  btn.classList.add("loading");
+  const newVal=!posed[id];
+  applyState(id,newVal);
+  await sbUpsert(id,ZONE,num,nom,newVal);
+  btn.classList.remove("loading");
+  setSyncOk();
+}
+
+function setSyncOk(){
+  const p=document.getElementById("sync-pill");
+  p.textContent="Synchronisé";p.className="pill sync";
+}
+
+async function loadData(){
+  try{
+    const rows=await sbGet(ZONE);
+    rows.forEach(r=>applyState(r.id,r.posed));
+    setSyncOk();
+  }catch(e){
+    const p=document.getElementById("sync-pill");
+    p.textContent="Hors ligne";p.className="pill err";
+  }
+}
+
+loadData();
+setInterval(loadData,10000);
+</script>
+</body>
+</html>

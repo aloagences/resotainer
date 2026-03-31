@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Resotainer — Zone 4 · Bourg-lès-Valence (26)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#1a1a1a;background:#f4f6f8;padding:1.25rem}
+.header{padding-bottom:.75rem;border-bottom:1px solid #e5e5e5;margin-bottom:1rem}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.brand{font-size:17px;font-weight:700;color:#1a1a1a}
+.pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;color:#555;background:white;border:1px solid #ddd;border-radius:20px;padding:4px 12px}
+.pill.sync{color:#166534;background:#f0fdf4;border-color:#bbf7d0}
+.pill.err{color:#9f1239;background:#fff1f2;border-color:#fecdd3}
+.prog-row{display:flex;align-items:center;gap:10px}
+.g-track{flex:1;height:6px;background:#e5e5e5;border-radius:3px;overflow:hidden}
+.g-fill{height:100%;border-radius:3px;transition:width .4s}
+.g-label{font-size:12px;color:#666;white-space:nowrap;font-weight:600}
+.section-head{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.6px;padding:10px 0 6px;border-top:1px solid #f0f0f0;margin-top:4px}
+.section-head:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ag-card{background:white;border:1px solid #e5e5e5;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;transition:background .15s}
+.ag-card:hover{background:#fafafa}
+.ag-card.done{background:#f0fdf4;border-color:#bbf7d0}
+.ag-card.warn-bg{background:#fffbeb;border-color:#fde68a}
+.ag-card.closed{background:#fff1f2;border-color:#fecdd3;opacity:.85}
+.ag-row1{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.ag-num{font-size:11px;color:#ccc;font-weight:700;width:18px;flex-shrink:0}
+.ag-name{font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:10px;padding:1px 7px;border-radius:6px;flex-shrink:0;font-weight:600;white-space:nowrap}
+.b-ok{background:#dcfce7;color:#166534}
+.b-warn{background:#fef9c3;color:#854d0e}
+.b-closed{background:#ffe4e6;color:#9f1239}
+.b-unk{background:#f3f4f6;color:#6b7280}
+.ag-row2{display:flex;align-items:center;gap:5px;padding-left:26px;margin-bottom:2px}
+.ag-adr{font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.ag-dot{width:3px;height:3px;border-radius:50%;background:#ccc;flex-shrink:0}
+.ag-tel{font-size:11px;color:#555;white-space:nowrap;font-weight:600}
+.ag-sub{font-size:10px;color:#aaa;font-style:italic;padding-left:26px;display:block;margin-bottom:2px}
+.ag-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.gps-row{display:flex;gap:4px}
+.btn-nav{font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #ddd;color:#555;background:white;text-decoration:none;display:inline-block;font-weight:600}
+.btn-nav:hover{background:#f5f5f5}
+.btn-gm{border-color:#bbd6f7;color:#1a56b0}
+.btn-wz{border-color:#b2f0f5;color:#0e7490}
+.cb-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;border:1px solid #e5e5e5;background:white;cursor:pointer;font-size:11px;color:#999;font-weight:600;transition:all .15s;white-space:nowrap}
+.cb-btn:hover{background:#f5f5f5}
+.cb-btn.posed{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.cb-btn.loading{opacity:.6;pointer-events:none}
+.dot-live{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <span class="brand" style="color:#b7410e">Resotainer · Zone 4 — Bourg-lès-Valence (26)</span>
+    <div class="pills">
+      <span class="pill">Jeudi 2 avril · 14h–18h</span>
+      <span class="pill" id="sync-pill">Connexion...</span>
+    </div>
+  </div>
+  <div class="prog-row">
+    <span class="g-label" id="g-label">0 / 25 posées</span>
+    <div class="g-track"><div class="g-fill" id="g-fill" style="width:0%;background:#b7410e"></div></div>
+    <span class="g-label" id="g-pct">0%</span>
+  </div>
+</div>
+
+<div class="section-head">Romans-sur-Isère</div>
+<div class="ag-card" id="card-z4_1">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">1</span>
+      <span class="ag-name">Immo Conseil</span>
+      <span class="badge b-ok">14h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">23 Rue de la République, 26100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 02 62 81</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Immo%20Conseil%2023%20Rue%20de%20la%20R%C3%A9publique%2C%2026100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Immo%20Conseil%2023%20Rue%20de%20la%20R%C3%A9publique%2C%2026100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_1" onclick="toggle('z4_1',1,'Immo Conseil')" >
+      <span id="btntxt-z4_1">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_2">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">2</span>
+      <span class="ag-name">Séverine Mangin Immo</span>
+      <span class="badge b-ok">9h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">41 Place Jean Jaurès, 26100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 45 86 24</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=S%C3%A9verine%20Mangin%20Immo%2041%20Place%20Jean%20Jaur%C3%A8s%2C%2026100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=S%C3%A9verine%20Mangin%20Immo%2041%20Place%20Jean%20Jaur%C3%A8s%2C%2026100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_2" onclick="toggle('z4_2',2,'Séverine Mangin Immo')" >
+      <span id="btntxt-z4_2">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_3">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">3</span>
+      <span class="ag-name">Century 21 Orcalla</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">15 bis Place Jean Jaurès, 26100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 82 32 70 40</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Century%2021%20Orcalla%2015%20bis%20Place%20Jean%20Jaur%C3%A8s%2C%2026100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Century%2021%20Orcalla%2015%20bis%20Place%20Jean%20Jaur%C3%A8s%2C%2026100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_3" onclick="toggle('z4_3',3,'Century 21 Orcalla')" >
+      <span id="btntxt-z4_3">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_4">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">4</span>
+      <span class="ag-name">IMMO de France Hybord</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">3 Place Jean Jaurès, 26100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 70 72 60</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=IMMO%20de%20France%20Hybord%203%20Place%20Jean%20Jaur%C3%A8s%2C%2026100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=IMMO%20de%20France%20Hybord%203%20Place%20Jean%20Jaur%C3%A8s%2C%2026100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_4" onclick="toggle('z4_4',4,'IMMO de France Hybord')" >
+      <span id="btntxt-z4_4">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_5">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">5</span>
+      <span class="ag-name">Square Habitat Romans</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">1 Pl. du Champ de Mars, 26100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 70 00 08</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Square%20Habitat%20Romans%201%20Pl.%20du%20Champ%20de%20Mars%2C%2026100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Square%20Habitat%20Romans%201%20Pl.%20du%20Champ%20de%20Mars%2C%2026100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_5" onclick="toggle('z4_5',5,'Square Habitat Romans')" >
+      <span id="btntxt-z4_5">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_6">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">6</span>
+      <span class="ag-name">Arth'Immo</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">3 Av. Victor Hugo, 26100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 70 38 88</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=ArthImmo%203%20Av.%20Victor%20Hugo%2C%2026100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=ArthImmo%203%20Av.%20Victor%20Hugo%2C%2026100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_6" onclick="toggle('z4_6',6,'ArthImmo')" >
+      <span id="btntxt-z4_6">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_7">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">7</span>
+      <span class="ag-name">Vic Immobilier</span>
+      <span class="badge b-ok">14h–18h30</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">1 Av. Pierre Semard, 26100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 05 06 16</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Vic%20Immobilier%201%20Av.%20Pierre%20Semard%2C%2026100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Vic%20Immobilier%201%20Av.%20Pierre%20Semard%2C%2026100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_7" onclick="toggle('z4_7',7,'Vic Immobilier')" >
+      <span id="btntxt-z4_7">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_8">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">8</span>
+      <span class="ag-name">Intens'Immo</span>
+      <span class="badge b-ok">13h30–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">18 Cours Pierre Didier, 26100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 02 15 00</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=IntensImmo%2018%20Cours%20Pierre%20Didier%2C%2026100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=IntensImmo%2018%20Cours%20Pierre%20Didier%2C%2026100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_8" onclick="toggle('z4_8',8,'IntensImmo')" >
+      <span id="btntxt-z4_8">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Bourg-lès-Valence</div>
+<div class="ag-card" id="card-z4_9">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">9</span>
+      <span class="ag-name">L'Immobilier du Cyrano</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">4 Av. Jean Moulin, 26500</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 86 14 20</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=LImmobilier%20du%20Cyrano%204%20Av.%20Jean%20Moulin%2C%2026500" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=LImmobilier%20du%20Cyrano%204%20Av.%20Jean%20Moulin%2C%2026500&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_9" onclick="toggle('z4_9',9,'LImmobilier du Cyrano')" >
+      <span id="btntxt-z4_9">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_10">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">10</span>
+      <span class="ag-name">Century 21 Bourcain</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">5 Rue François Marbos, 26500</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 81 35 81</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Century%2021%20Bourcain%205%20Rue%20Fran%C3%A7ois%20Marbos%2C%2026500" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Century%2021%20Bourcain%205%20Rue%20Fran%C3%A7ois%20Marbos%2C%2026500&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_10" onclick="toggle('z4_10',10,'Century 21 Bourcain')" >
+      <span id="btntxt-z4_10">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_11">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">11</span>
+      <span class="ag-name">ORPI Carrot</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">83 Av. Marc Urtin, 26500</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 27 24 06 18</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=ORPI%20Carrot%2083%20Av.%20Marc%20Urtin%2C%2026500" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=ORPI%20Carrot%2083%20Av.%20Marc%20Urtin%2C%2026500&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_11" onclick="toggle('z4_11',11,'ORPI Carrot')" >
+      <span id="btntxt-z4_11">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_12">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">12</span>
+      <span class="ag-name">Katy Laurent</span>
+      <span class="badge b-ok">9h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">70 Av. Marc Urtin, 26500</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">06 12 21 96 05</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Katy%20Laurent%2070%20Av.%20Marc%20Urtin%2C%2026500" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Katy%20Laurent%2070%20Av.%20Marc%20Urtin%2C%2026500&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_12" onclick="toggle('z4_12',12,'Katy Laurent')" >
+      <span id="btntxt-z4_12">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Valence</div>
+<div class="ag-card" id="card-z4_13">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">13</span>
+      <span class="ag-name">Square Habitat Valence</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">81 Av. Sadi Carnot, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 56 02 22</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Square%20Habitat%20Valence%2081%20Av.%20Sadi%20Carnot%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Square%20Habitat%20Valence%2081%20Av.%20Sadi%20Carnot%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_13" onclick="toggle('z4_13',13,'Square Habitat Valence')" >
+      <span id="btntxt-z4_13">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_14">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">14</span>
+      <span class="ag-name">ORPI Valence</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">21 Av. Félix Faure, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 47 89 90</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=ORPI%20Valence%2021%20Av.%20F%C3%A9lix%20Faure%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=ORPI%20Valence%2021%20Av.%20F%C3%A9lix%20Faure%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_14" onclick="toggle('z4_14',14,'ORPI Valence')" >
+      <span id="btntxt-z4_14">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_15">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">15</span>
+      <span class="ag-name">L'Adresse Valence</span>
+      <span class="badge b-ok">13h30–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">10 Pl. de la République, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">09 81 15 02 32</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=LAdresse%20Valence%2010%20Pl.%20de%20la%20R%C3%A9publique%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=LAdresse%20Valence%2010%20Pl.%20de%20la%20R%C3%A9publique%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_15" onclick="toggle('z4_15',15,'LAdresse Valence')" >
+      <span id="btntxt-z4_15">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_16">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">16</span>
+      <span class="ag-name">Laforêt Valence</span>
+      <span class="badge b-ok">14h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">12 Bd Gal de Gaulle, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 87 96 01 75</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Lafor%C3%AAt%20Valence%2012%20Bd%20Gal%20de%20Gaulle%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Lafor%C3%AAt%20Valence%2012%20Bd%20Gal%20de%20Gaulle%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_16" onclick="toggle('z4_16',16,'Laforêt Valence')" >
+      <span id="btntxt-z4_16">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_17">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">17</span>
+      <span class="ag-name">Nostra Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">65 Av. Léon Gambetta, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 83 93 47</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Nostra%20Immobilier%2065%20Av.%20L%C3%A9on%20Gambetta%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Nostra%20Immobilier%2065%20Av.%20L%C3%A9on%20Gambetta%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_17" onclick="toggle('z4_17',17,'Nostra Immobilier')" >
+      <span id="btntxt-z4_17">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_18">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">18</span>
+      <span class="ag-name">Agence Korine Olivier</span>
+      <span class="badge b-ok">10h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">4 Rue Ferdinand Marie, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 58 02 06</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Agence%20Korine%20Olivier%204%20Rue%20Ferdinand%20Marie%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Agence%20Korine%20Olivier%204%20Rue%20Ferdinand%20Marie%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_18" onclick="toggle('z4_18',18,'Agence Korine Olivier')" >
+      <span id="btntxt-z4_18">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_19">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">19</span>
+      <span class="ag-name">Guy Hoquet Valence</span>
+      <span class="badge b-ok">14h–18h30</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">17 Rue Balzac, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 81 75 35</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Guy%20Hoquet%20Valence%2017%20Rue%20Balzac%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Guy%20Hoquet%20Valence%2017%20Rue%20Balzac%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_19" onclick="toggle('z4_19',19,'Guy Hoquet Valence')" >
+      <span id="btntxt-z4_19">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_20">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">20</span>
+      <span class="ag-name">Nestenn Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">209 Av. Victor Hugo, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 55 93 32</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Nestenn%20Immobilier%20209%20Av.%20Victor%20Hugo%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Nestenn%20Immobilier%20209%20Av.%20Victor%20Hugo%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_20" onclick="toggle('z4_20',20,'Nestenn Immobilier')" >
+      <span id="btntxt-z4_20">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_21">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">21</span>
+      <span class="ag-name">Guy Hoquet Valence Sud</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">350 Av. Victor Hugo, 26000</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 43 87 05</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Guy%20Hoquet%20Valence%20Sud%20350%20Av.%20Victor%20Hugo%2C%2026000" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Guy%20Hoquet%20Valence%20Sud%20350%20Av.%20Victor%20Hugo%2C%2026000&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_21" onclick="toggle('z4_21',21,'Guy Hoquet Valence Sud')" >
+      <span id="btntxt-z4_21">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Portes-lès-Valence</div>
+<div class="ag-card" id="card-z4_22">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">22</span>
+      <span class="ag-name">JL Immobilier</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">6 Rue Pierre Semard, 26800</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 83 24 63</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=JL%20Immobilier%206%20Rue%20Pierre%20Semard%2C%2026800" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=JL%20Immobilier%206%20Rue%20Pierre%20Semard%2C%2026800&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_22" onclick="toggle('z4_22',22,'JL Immobilier')" >
+      <span id="btntxt-z4_22">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_23">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">23</span>
+      <span class="ag-name">IMMO & CO Santiago</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">91 Rue Jean Jaurès, 26800</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">06 28 48 73 83</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=IMMO%20%26%20CO%20Santiago%2091%20Rue%20Jean%20Jaur%C3%A8s%2C%2026800" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=IMMO%20%26%20CO%20Santiago%2091%20Rue%20Jean%20Jaur%C3%A8s%2C%2026800&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_23" onclick="toggle('z4_23',23,'IMMO & CO Santiago')" >
+      <span id="btntxt-z4_23">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_24">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">24</span>
+      <span class="ag-name">Immogroup France</span>
+      <span class="badge b-ok">9h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">138 Rue Jean Jaurès, 26800</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 75 61 43 75</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Immogroup%20France%20138%20Rue%20Jean%20Jaur%C3%A8s%2C%2026800" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Immogroup%20France%20138%20Rue%20Jean%20Jaur%C3%A8s%2C%2026800&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_24" onclick="toggle('z4_24',24,'Immogroup France')" >
+      <span id="btntxt-z4_24">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z4_25">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">25</span>
+      <span class="ag-name">Essentielles Immobilier</span>
+      <span class="badge b-ok">9h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">8 Rue Danièle Casanova, 26800</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">06 10 68 72 53</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Essentielles%20Immobilier%208%20Rue%20Dani%C3%A8le%20Casanova%2C%2026800" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Essentielles%20Immobilier%208%20Rue%20Dani%C3%A8le%20Casanova%2C%2026800&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z4_25" onclick="toggle('z4_25',25,'Essentielles Immobilier')" >
+      <span id="btntxt-z4_25">Poser</span>
+    </button>
+  </div>
+</div>
+
+
+<script>
+
+const SUPA_URL="https://lyqpakqyrmudwjqfcnqa.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cXBha3F5cm11ZHdqcWZjbnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjMxODksImV4cCI6MjA5MDUzOTE4OX0._luZm6JrlO4JYHs86GFx4QKl57S4lsZf0-o-Yq6kPVg";
+
+async function sbGet(zone){
+  const r=await fetch(SUPA_URL+"/rest/v1/poses?zone=eq."+zone+"&select=id,posed,posed_at",{
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}
+  });
+  return r.ok?r.json():[];
+}
+
+async function sbUpsert(id,zone,num,nom,posed){
+  const body=JSON.stringify({id,zone,pose_num:num,nom,posed,posed_at:posed?new Date().toISOString():null,updated_at:new Date().toISOString()});
+  await fetch(SUPA_URL+"/rest/v1/poses",{
+    method:"POST",
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates"},
+    body
+  });
+}
+
+function sbSubscribe(zone,cb){
+  const es=new EventSource(SUPA_URL+"/realtime/v1/api/broadcast?apikey="+SUPA_KEY);
+  setInterval(()=>sbGet(zone).then(cb),8000);
+}
+
+
+const ZONE="z4";
+const TOTAL=25;
+const posed={};
+
+function gu(n){return encodeURIComponent(n);}
+
+function applyState(id,val){
+  posed[id]=val;
+  const card=document.getElementById("card-"+id);
+  const btn=document.getElementById("btn-"+id);
+  const txt=document.getElementById("btntxt-"+id);
+  if(!card||!btn)return;
+  if(val){card.classList.add("done");btn.classList.add("posed");txt.textContent="Posé ✓";}
+  else{card.classList.remove("done");btn.classList.remove("posed");txt.textContent="Poser";}
+  updateProg();
+}
+
+function updateProg(){
+  const d=Object.values(posed).filter(Boolean).length;
+  const pct=Math.round(d/TOTAL*100);
+  document.getElementById("g-label").textContent=d+" / "+TOTAL+" posées";
+  document.getElementById("g-pct").textContent=pct+"%";
+  document.getElementById("g-fill").style.width=pct+"%";
+}
+
+async function toggle(id,num,nom){
+  const btn=document.getElementById("btn-"+id);
+  btn.classList.add("loading");
+  const newVal=!posed[id];
+  applyState(id,newVal);
+  await sbUpsert(id,ZONE,num,nom,newVal);
+  btn.classList.remove("loading");
+  setSyncOk();
+}
+
+function setSyncOk(){
+  const p=document.getElementById("sync-pill");
+  p.textContent="Synchronisé";p.className="pill sync";
+}
+
+async function loadData(){
+  try{
+    const rows=await sbGet(ZONE);
+    rows.forEach(r=>applyState(r.id,r.posed));
+    setSyncOk();
+  }catch(e){
+    const p=document.getElementById("sync-pill");
+    p.textContent="Hors ligne";p.className="pill err";
+  }
+}
+
+loadData();
+setInterval(loadData,10000);
+</script>
+</body>
+</html>

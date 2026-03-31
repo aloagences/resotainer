@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Resotainer — Zone 3 · Champenoux (54)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#1a1a1a;background:#f4f6f8;padding:1.25rem}
+.header{padding-bottom:.75rem;border-bottom:1px solid #e5e5e5;margin-bottom:1rem}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.brand{font-size:17px;font-weight:700;color:#1a1a1a}
+.pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;color:#555;background:white;border:1px solid #ddd;border-radius:20px;padding:4px 12px}
+.pill.sync{color:#166534;background:#f0fdf4;border-color:#bbf7d0}
+.pill.err{color:#9f1239;background:#fff1f2;border-color:#fecdd3}
+.prog-row{display:flex;align-items:center;gap:10px}
+.g-track{flex:1;height:6px;background:#e5e5e5;border-radius:3px;overflow:hidden}
+.g-fill{height:100%;border-radius:3px;transition:width .4s}
+.g-label{font-size:12px;color:#666;white-space:nowrap;font-weight:600}
+.section-head{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.6px;padding:10px 0 6px;border-top:1px solid #f0f0f0;margin-top:4px}
+.section-head:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ag-card{background:white;border:1px solid #e5e5e5;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;transition:background .15s}
+.ag-card:hover{background:#fafafa}
+.ag-card.done{background:#f0fdf4;border-color:#bbf7d0}
+.ag-card.warn-bg{background:#fffbeb;border-color:#fde68a}
+.ag-card.closed{background:#fff1f2;border-color:#fecdd3;opacity:.85}
+.ag-row1{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.ag-num{font-size:11px;color:#ccc;font-weight:700;width:18px;flex-shrink:0}
+.ag-name{font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:10px;padding:1px 7px;border-radius:6px;flex-shrink:0;font-weight:600;white-space:nowrap}
+.b-ok{background:#dcfce7;color:#166534}
+.b-warn{background:#fef9c3;color:#854d0e}
+.b-closed{background:#ffe4e6;color:#9f1239}
+.b-unk{background:#f3f4f6;color:#6b7280}
+.ag-row2{display:flex;align-items:center;gap:5px;padding-left:26px;margin-bottom:2px}
+.ag-adr{font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.ag-dot{width:3px;height:3px;border-radius:50%;background:#ccc;flex-shrink:0}
+.ag-tel{font-size:11px;color:#555;white-space:nowrap;font-weight:600}
+.ag-sub{font-size:10px;color:#aaa;font-style:italic;padding-left:26px;display:block;margin-bottom:2px}
+.ag-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.gps-row{display:flex;gap:4px}
+.btn-nav{font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #ddd;color:#555;background:white;text-decoration:none;display:inline-block;font-weight:600}
+.btn-nav:hover{background:#f5f5f5}
+.btn-gm{border-color:#bbd6f7;color:#1a56b0}
+.btn-wz{border-color:#b2f0f5;color:#0e7490}
+.cb-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;border:1px solid #e5e5e5;background:white;cursor:pointer;font-size:11px;color:#999;font-weight:600;transition:all .15s;white-space:nowrap}
+.cb-btn:hover{background:#f5f5f5}
+.cb-btn.posed{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.cb-btn.loading{opacity:.6;pointer-events:none}
+.dot-live{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <span class="brand" style="color:#7d3c98">Resotainer · Zone 3 — Champenoux (54)</span>
+    <div class="pills">
+      <span class="pill">Jeudi 2 avril · 14h–18h</span>
+      <span class="pill" id="sync-pill">Connexion...</span>
+    </div>
+  </div>
+  <div class="prog-row">
+    <span class="g-label" id="g-label">0 / 11 posées</span>
+    <div class="g-track"><div class="g-fill" id="g-fill" style="width:0%;background:#7d3c98"></div></div>
+    <span class="g-label" id="g-pct">0%</span>
+  </div>
+</div>
+
+<div class="section-head">Champenoux</div>
+<div class="ag-card" id="card-z3_1">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">1</span>
+      <span class="ag-name">Esprit Vif Immobilier</span>
+      <span class="badge b-ok">9h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">30 bis Rue St-Barthélemy, 54280</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 54 95 99 99</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Esprit%20Vif%20Immobilier%2030%20bis%20Rue%20St-Barth%C3%A9lemy%2C%2054280" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Esprit%20Vif%20Immobilier%2030%20bis%20Rue%20St-Barth%C3%A9lemy%2C%2054280&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_1" onclick="toggle('z3_1',1,'Esprit Vif Immobilier')" >
+      <span id="btntxt-z3_1">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Pulnoy / Seichamps</div>
+<div class="ag-card" id="card-z3_2">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">2</span>
+      <span class="ag-name">ORIA Immobilier Pulnoy</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">26 Av. Ch. de Gaulle, 54425</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 83 21 97 51</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=ORIA%20Immobilier%20Pulnoy%2026%20Av.%20Ch.%20de%20Gaulle%2C%2054425" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=ORIA%20Immobilier%20Pulnoy%2026%20Av.%20Ch.%20de%20Gaulle%2C%2054425&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_2" onclick="toggle('z3_2',2,'ORIA Immobilier Pulnoy')" >
+      <span id="btntxt-z3_2">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z3_3">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">3</span>
+      <span class="ag-name">Guillaume Didier SAFTI</span>
+      <span class="badge b-ok">8h–20h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">1 Rue Emmanuel Héré, 54280</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">06 48 30 94 35</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Guillaume%20Didier%20SAFTI%201%20Rue%20Emmanuel%20H%C3%A9r%C3%A9%2C%2054280" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Guillaume%20Didier%20SAFTI%201%20Rue%20Emmanuel%20H%C3%A9r%C3%A9%2C%2054280&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_3" onclick="toggle('z3_3',3,'Guillaume Didier SAFTI')" >
+      <span id="btntxt-z3_3">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Essey-lès-Nancy</div>
+<div class="ag-card" id="card-z3_4">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">4</span>
+      <span class="ag-name">RIPA Nancy Est (ORPI)</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">7 Pl. de la République, 54270</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 83 20 02 10</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=RIPA%20Nancy%20Est%20%28ORPI%29%207%20Pl.%20de%20la%20R%C3%A9publique%2C%2054270" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=RIPA%20Nancy%20Est%20%28ORPI%29%207%20Pl.%20de%20la%20R%C3%A9publique%2C%2054270&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_4" onclick="toggle('z3_4',4,'RIPA Nancy Est (ORPI)')" >
+      <span id="btntxt-z3_4">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z3_5">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">5</span>
+      <span class="ag-name">Laforêt Essey-lès-Nancy</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">25 Av. Foch, 54270</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 83 18 09 00</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Lafor%C3%AAt%20Essey-l%C3%A8s-Nancy%2025%20Av.%20Foch%2C%2054270" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Lafor%C3%AAt%20Essey-l%C3%A8s-Nancy%2025%20Av.%20Foch%2C%2054270&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_5" onclick="toggle('z3_5',5,'Laforêt Essey-lès-Nancy')" >
+      <span id="btntxt-z3_5">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z3_6">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">6</span>
+      <span class="ag-name">Mathieu Floirac (MFI)</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">41 B Av. Foch, 54270</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 83 20 50 00</span>
+    </div><span class="ag-sub">Après-midi seulement</span>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Mathieu%20Floirac%20%28MFI%29%2041%20B%20Av.%20Foch%2C%2054270" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Mathieu%20Floirac%20%28MFI%29%2041%20B%20Av.%20Foch%2C%2054270&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_6" onclick="toggle('z3_6',6,'Mathieu Floirac (MFI)')" >
+      <span id="btntxt-z3_6">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z3_7">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">7</span>
+      <span class="ag-name">Émilie Scheidt SAFTI</span>
+      <span class="badge b-ok">8h–20h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">10 Rue Parmentier, 54270</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">06 60 74 05 67</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=%C3%89milie%20Scheidt%20SAFTI%2010%20Rue%20Parmentier%2C%2054270" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=%C3%89milie%20Scheidt%20SAFTI%2010%20Rue%20Parmentier%2C%2054270&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_7" onclick="toggle('z3_7',7,'Émilie Scheidt SAFTI')" >
+      <span id="btntxt-z3_7">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Saint-Max / Malzéville</div>
+<div class="ag-card" id="card-z3_8">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">8</span>
+      <span class="ag-name">Guy Hoquet Saint-Max</span>
+      <span class="badge b-ok">14h–18h30</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">7 Rue Alexandre 1er, 54130</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 83 21 41 52</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Guy%20Hoquet%20Saint-Max%207%20Rue%20Alexandre%201er%2C%2054130" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Guy%20Hoquet%20Saint-Max%207%20Rue%20Alexandre%201er%2C%2054130&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_8" onclick="toggle('z3_8',8,'Guy Hoquet Saint-Max')" >
+      <span id="btntxt-z3_8">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z3_9">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">9</span>
+      <span class="ag-name">Century 21 Les Portes d'Or</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">16 Av. Carnot, 54130</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 10 95 80 70</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Century%2021%20Les%20Portes%20dOr%2016%20Av.%20Carnot%2C%2054130" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Century%2021%20Les%20Portes%20dOr%2016%20Av.%20Carnot%2C%2054130&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_9" onclick="toggle('z3_9',9,'Century 21 Les Portes dOr')" >
+      <span id="btntxt-z3_9">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z3_10">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">10</span>
+      <span class="ag-name">JV Immobilier SWIXIM</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">101 Av. Carnot, 54130</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 83 44 61 33</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=JV%20Immobilier%20SWIXIM%20101%20Av.%20Carnot%2C%2054130" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=JV%20Immobilier%20SWIXIM%20101%20Av.%20Carnot%2C%2054130&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_10" onclick="toggle('z3_10',10,'JV Immobilier SWIXIM')" >
+      <span id="btntxt-z3_10">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z3_11">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">11</span>
+      <span class="ag-name">Parade & Fils</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">61 Rue Sadi Carnot, 54220</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">03 83 20 89 85</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Parade%20%26%20Fils%2061%20Rue%20Sadi%20Carnot%2C%2054220" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Parade%20%26%20Fils%2061%20Rue%20Sadi%20Carnot%2C%2054220&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z3_11" onclick="toggle('z3_11',11,'Parade & Fils')" >
+      <span id="btntxt-z3_11">Poser</span>
+    </button>
+  </div>
+</div>
+
+
+<script>
+
+const SUPA_URL="https://lyqpakqyrmudwjqfcnqa.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cXBha3F5cm11ZHdqcWZjbnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjMxODksImV4cCI6MjA5MDUzOTE4OX0._luZm6JrlO4JYHs86GFx4QKl57S4lsZf0-o-Yq6kPVg";
+
+async function sbGet(zone){
+  const r=await fetch(SUPA_URL+"/rest/v1/poses?zone=eq."+zone+"&select=id,posed,posed_at",{
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}
+  });
+  return r.ok?r.json():[];
+}
+
+async function sbUpsert(id,zone,num,nom,posed){
+  const body=JSON.stringify({id,zone,pose_num:num,nom,posed,posed_at:posed?new Date().toISOString():null,updated_at:new Date().toISOString()});
+  await fetch(SUPA_URL+"/rest/v1/poses",{
+    method:"POST",
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates"},
+    body
+  });
+}
+
+function sbSubscribe(zone,cb){
+  const es=new EventSource(SUPA_URL+"/realtime/v1/api/broadcast?apikey="+SUPA_KEY);
+  setInterval(()=>sbGet(zone).then(cb),8000);
+}
+
+
+const ZONE="z3";
+const TOTAL=11;
+const posed={};
+
+function gu(n){return encodeURIComponent(n);}
+
+function applyState(id,val){
+  posed[id]=val;
+  const card=document.getElementById("card-"+id);
+  const btn=document.getElementById("btn-"+id);
+  const txt=document.getElementById("btntxt-"+id);
+  if(!card||!btn)return;
+  if(val){card.classList.add("done");btn.classList.add("posed");txt.textContent="Posé ✓";}
+  else{card.classList.remove("done");btn.classList.remove("posed");txt.textContent="Poser";}
+  updateProg();
+}
+
+function updateProg(){
+  const d=Object.values(posed).filter(Boolean).length;
+  const pct=Math.round(d/TOTAL*100);
+  document.getElementById("g-label").textContent=d+" / "+TOTAL+" posées";
+  document.getElementById("g-pct").textContent=pct+"%";
+  document.getElementById("g-fill").style.width=pct+"%";
+}
+
+async function toggle(id,num,nom){
+  const btn=document.getElementById("btn-"+id);
+  btn.classList.add("loading");
+  const newVal=!posed[id];
+  applyState(id,newVal);
+  await sbUpsert(id,ZONE,num,nom,newVal);
+  btn.classList.remove("loading");
+  setSyncOk();
+}
+
+function setSyncOk(){
+  const p=document.getElementById("sync-pill");
+  p.textContent="Synchronisé";p.className="pill sync";
+}
+
+async function loadData(){
+  try{
+    const rows=await sbGet(ZONE);
+    rows.forEach(r=>applyState(r.id,r.posed));
+    setSyncOk();
+  }catch(e){
+    const p=document.getElementById("sync-pill");
+    p.textContent="Hors ligne";p.className="pill err";
+  }
+}
+
+loadData();
+setInterval(loadData,10000);
+</script>
+</body>
+</html>

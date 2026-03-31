@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Resotainer — Zone 2 · Lézignan (11)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#1a1a1a;background:#f4f6f8;padding:1.25rem}
+.header{padding-bottom:.75rem;border-bottom:1px solid #e5e5e5;margin-bottom:1rem}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.brand{font-size:17px;font-weight:700;color:#1a1a1a}
+.pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{font-size:11px;color:#555;background:white;border:1px solid #ddd;border-radius:20px;padding:4px 12px}
+.pill.sync{color:#166534;background:#f0fdf4;border-color:#bbf7d0}
+.pill.err{color:#9f1239;background:#fff1f2;border-color:#fecdd3}
+.prog-row{display:flex;align-items:center;gap:10px}
+.g-track{flex:1;height:6px;background:#e5e5e5;border-radius:3px;overflow:hidden}
+.g-fill{height:100%;border-radius:3px;transition:width .4s}
+.g-label{font-size:12px;color:#666;white-space:nowrap;font-weight:600}
+.section-head{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.6px;padding:10px 0 6px;border-top:1px solid #f0f0f0;margin-top:4px}
+.section-head:first-of-type{border-top:none;margin-top:0;padding-top:0}
+.ag-card{background:white;border:1px solid #e5e5e5;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;transition:background .15s}
+.ag-card:hover{background:#fafafa}
+.ag-card.done{background:#f0fdf4;border-color:#bbf7d0}
+.ag-card.warn-bg{background:#fffbeb;border-color:#fde68a}
+.ag-card.closed{background:#fff1f2;border-color:#fecdd3;opacity:.85}
+.ag-row1{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.ag-num{font-size:11px;color:#ccc;font-weight:700;width:18px;flex-shrink:0}
+.ag-name{font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:10px;padding:1px 7px;border-radius:6px;flex-shrink:0;font-weight:600;white-space:nowrap}
+.b-ok{background:#dcfce7;color:#166534}
+.b-warn{background:#fef9c3;color:#854d0e}
+.b-closed{background:#ffe4e6;color:#9f1239}
+.b-unk{background:#f3f4f6;color:#6b7280}
+.ag-row2{display:flex;align-items:center;gap:5px;padding-left:26px;margin-bottom:2px}
+.ag-adr{font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.ag-dot{width:3px;height:3px;border-radius:50%;background:#ccc;flex-shrink:0}
+.ag-tel{font-size:11px;color:#555;white-space:nowrap;font-weight:600}
+.ag-sub{font-size:10px;color:#aaa;font-style:italic;padding-left:26px;display:block;margin-bottom:2px}
+.ag-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.gps-row{display:flex;gap:4px}
+.btn-nav{font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #ddd;color:#555;background:white;text-decoration:none;display:inline-block;font-weight:600}
+.btn-nav:hover{background:#f5f5f5}
+.btn-gm{border-color:#bbd6f7;color:#1a56b0}
+.btn-wz{border-color:#b2f0f5;color:#0e7490}
+.cb-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;border:1px solid #e5e5e5;background:white;cursor:pointer;font-size:11px;color:#999;font-weight:600;transition:all .15s;white-space:nowrap}
+.cb-btn:hover{background:#f5f5f5}
+.cb-btn.posed{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.cb-btn.loading{opacity:.6;pointer-events:none}
+.dot-live{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <span class="brand" style="color:#1e8449">Resotainer · Zone 2 — Lézignan (11)</span>
+    <div class="pills">
+      <span class="pill">Jeudi 2 avril · 14h–18h</span>
+      <span class="pill" id="sync-pill">Connexion...</span>
+    </div>
+  </div>
+  <div class="prog-row">
+    <span class="g-label" id="g-label">0 / 12 posées</span>
+    <div class="g-track"><div class="g-fill" id="g-fill" style="width:0%;background:#1e8449"></div></div>
+    <span class="g-label" id="g-pct">0%</span>
+  </div>
+</div>
+
+<div class="section-head">Lézignan-Corbières</div>
+<div class="ag-card" id="card-z2_1">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">1</span>
+      <span class="ag-name">Agence Du Soleil</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">1 Rue Gérard Philipe, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 27 01 29</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Agence%20Du%20Soleil%201%20Rue%20G%C3%A9rard%20Philipe%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Agence%20Du%20Soleil%201%20Rue%20G%C3%A9rard%20Philipe%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_1" onclick="toggle('z2_1',1,'Agence Du Soleil')" >
+      <span id="btntxt-z2_1">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_2">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">2</span>
+      <span class="ag-name">L'@gence Lézignan</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">10 Bd Marx Dormoy, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 42 88 75</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=L%40gence%20L%C3%A9zignan%2010%20Bd%20Marx%20Dormoy%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=L%40gence%20L%C3%A9zignan%2010%20Bd%20Marx%20Dormoy%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_2" onclick="toggle('z2_2',2,'L@gence Lézignan')" >
+      <span id="btntxt-z2_2">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_3">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">3</span>
+      <span class="ag-name">Agence Immo Lézignan</span>
+      <span class="badge b-ok">9h–18h30</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">24 Bd Châteaudun, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 90 62 16</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Agence%20Immo%20L%C3%A9zignan%2024%20Bd%20Ch%C3%A2teaudun%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Agence%20Immo%20L%C3%A9zignan%2024%20Bd%20Ch%C3%A2teaudun%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_3" onclick="toggle('z2_3',3,'Agence Immo Lézignan')" >
+      <span id="btntxt-z2_3">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_4">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">4</span>
+      <span class="ag-name">Grimois Immobilier</span>
+      <span class="badge b-ok">8h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">5 Rue Guynemer, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 30 16 72 94</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Grimois%20Immobilier%205%20Rue%20Guynemer%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Grimois%20Immobilier%205%20Rue%20Guynemer%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_4" onclick="toggle('z2_4',4,'Grimois Immobilier')" >
+      <span id="btntxt-z2_4">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_5">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">5</span>
+      <span class="ag-name">L'Adresse Corbières</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">17 Rue Guynemer, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 11 66 96 15</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=LAdresse%20Corbi%C3%A8res%2017%20Rue%20Guynemer%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=LAdresse%20Corbi%C3%A8res%2017%20Rue%20Guynemer%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_5" onclick="toggle('z2_5',5,'LAdresse Corbières')" >
+      <span id="btntxt-z2_5">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_6">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">6</span>
+      <span class="ag-name">Pop Immobilier</span>
+      <span class="badge b-ok">8h–19h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">24 Cours République, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 65 84 27 03</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Pop%20Immobilier%2024%20Cours%20R%C3%A9publique%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Pop%20Immobilier%2024%20Cours%20R%C3%A9publique%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_6" onclick="toggle('z2_6',6,'Pop Immobilier')" >
+      <span id="btntxt-z2_6">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card closed" id="card-z2_7">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">7</span>
+      <span class="ag-name">Caroline Bleuze RE</span>
+      <span class="badge b-closed">Fermé PM</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">11 Cours République, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 27 03 03</span>
+    </div><span class="ag-sub">9h–12h30 seulement</span>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Caroline%20Bleuze%20RE%2011%20Cours%20R%C3%A9publique%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Caroline%20Bleuze%20RE%2011%20Cours%20R%C3%A9publique%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_7" onclick="toggle('z2_7',7,'Caroline Bleuze RE')" >
+      <span id="btntxt-z2_7">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_8">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">8</span>
+      <span class="ag-name">South Land Real Estate</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">19 Cours République, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 42 83 86</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=South%20Land%20Real%20Estate%2019%20Cours%20R%C3%A9publique%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=South%20Land%20Real%20Estate%2019%20Cours%20R%C3%A9publique%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_8" onclick="toggle('z2_8',8,'South Land Real Estate')" >
+      <span id="btntxt-z2_8">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_9">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">9</span>
+      <span class="ag-name">Lezimmo</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">30 Cours République, 11200</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 93 93 60</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Lezimmo%2030%20Cours%20R%C3%A9publique%2C%2011200" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Lezimmo%2030%20Cours%20R%C3%A9publique%2C%2011200&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_9" onclick="toggle('z2_9',9,'Lezimmo')" >
+      <span id="btntxt-z2_9">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="section-head">Narbonne (+20 km)</div>
+<div class="ag-card" id="card-z2_10">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">10</span>
+      <span class="ag-name">L'Adresse Narbonne</span>
+      <span class="badge b-ok">14h–18h30</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">2 Bd Frédéric Mistral, 11100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 75 09 90</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=LAdresse%20Narbonne%202%20Bd%20Fr%C3%A9d%C3%A9ric%20Mistral%2C%2011100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=LAdresse%20Narbonne%202%20Bd%20Fr%C3%A9d%C3%A9ric%20Mistral%2C%2011100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_10" onclick="toggle('z2_10',10,'LAdresse Narbonne')" >
+      <span id="btntxt-z2_10">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_11">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">11</span>
+      <span class="ag-name">Stéphane Plaza Narbonne</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">17 Bd Gambetta, 11100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 12 19 62</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=St%C3%A9phane%20Plaza%20Narbonne%2017%20Bd%20Gambetta%2C%2011100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=St%C3%A9phane%20Plaza%20Narbonne%2017%20Bd%20Gambetta%2C%2011100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_11" onclick="toggle('z2_11',11,'Stéphane Plaza Narbonne')" >
+      <span id="btntxt-z2_11">Poser</span>
+    </button>
+  </div>
+</div>
+<div class="ag-card" id="card-z2_12">
+  <div>
+    <div class="ag-row1">
+      <span class="ag-num">12</span>
+      <span class="ag-name">Guy Hoquet Narbonne</span>
+      <span class="badge b-ok">14h–18h</span>
+    </div>
+    <div class="ag-row2">
+      <span class="ag-adr">26 bis Bd Gambetta, 11100</span>
+      <span class="ag-dot"></span>
+      <span class="ag-tel">04 68 41 29 15</span>
+    </div>
+  </div>
+  <div class="ag-right">
+    <div class="gps-row">
+      <a class="btn-nav btn-gm" href="https://www.google.com/maps/search/?api=1&query=Guy%20Hoquet%20Narbonne%2026%20bis%20Bd%20Gambetta%2C%2011100" target="_blank">GMaps</a>
+      <a class="btn-nav btn-wz" href="https://waze.com/ul?q=Guy%20Hoquet%20Narbonne%2026%20bis%20Bd%20Gambetta%2C%2011100&navigate=yes" target="_blank">Waze</a>
+    </div>
+    <button class="cb-btn" id="btn-z2_12" onclick="toggle('z2_12',12,'Guy Hoquet Narbonne')" >
+      <span id="btntxt-z2_12">Poser</span>
+    </button>
+  </div>
+</div>
+
+
+<script>
+
+const SUPA_URL="https://lyqpakqyrmudwjqfcnqa.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5cXBha3F5cm11ZHdqcWZjbnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjMxODksImV4cCI6MjA5MDUzOTE4OX0._luZm6JrlO4JYHs86GFx4QKl57S4lsZf0-o-Yq6kPVg";
+
+async function sbGet(zone){
+  const r=await fetch(SUPA_URL+"/rest/v1/poses?zone=eq."+zone+"&select=id,posed,posed_at",{
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY}
+  });
+  return r.ok?r.json():[];
+}
+
+async function sbUpsert(id,zone,num,nom,posed){
+  const body=JSON.stringify({id,zone,pose_num:num,nom,posed,posed_at:posed?new Date().toISOString():null,updated_at:new Date().toISOString()});
+  await fetch(SUPA_URL+"/rest/v1/poses",{
+    method:"POST",
+    headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates"},
+    body
+  });
+}
+
+function sbSubscribe(zone,cb){
+  const es=new EventSource(SUPA_URL+"/realtime/v1/api/broadcast?apikey="+SUPA_KEY);
+  setInterval(()=>sbGet(zone).then(cb),8000);
+}
+
+
+const ZONE="z2";
+const TOTAL=12;
+const posed={};
+
+function gu(n){return encodeURIComponent(n);}
+
+function applyState(id,val){
+  posed[id]=val;
+  const card=document.getElementById("card-"+id);
+  const btn=document.getElementById("btn-"+id);
+  const txt=document.getElementById("btntxt-"+id);
+  if(!card||!btn)return;
+  if(val){card.classList.add("done");btn.classList.add("posed");txt.textContent="Posé ✓";}
+  else{card.classList.remove("done");btn.classList.remove("posed");txt.textContent="Poser";}
+  updateProg();
+}
+
+function updateProg(){
+  const d=Object.values(posed).filter(Boolean).length;
+  const pct=Math.round(d/TOTAL*100);
+  document.getElementById("g-label").textContent=d+" / "+TOTAL+" posées";
+  document.getElementById("g-pct").textContent=pct+"%";
+  document.getElementById("g-fill").style.width=pct+"%";
+}
+
+async function toggle(id,num,nom){
+  const btn=document.getElementById("btn-"+id);
+  btn.classList.add("loading");
+  const newVal=!posed[id];
+  applyState(id,newVal);
+  await sbUpsert(id,ZONE,num,nom,newVal);
+  btn.classList.remove("loading");
+  setSyncOk();
+}
+
+function setSyncOk(){
+  const p=document.getElementById("sync-pill");
+  p.textContent="Synchronisé";p.className="pill sync";
+}
+
+async function loadData(){
+  try{
+    const rows=await sbGet(ZONE);
+    rows.forEach(r=>applyState(r.id,r.posed));
+    setSyncOk();
+  }catch(e){
+    const p=document.getElementById("sync-pill");
+    p.textContent="Hors ligne";p.className="pill err";
+  }
+}
+
+loadData();
+setInterval(loadData,10000);
+</script>
+</body>
+</html>
